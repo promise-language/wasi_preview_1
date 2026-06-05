@@ -1,0 +1,27 @@
+wasi_preview_1 — WASI Preview 1 raw bindings for the Promise programming language
+
+Copyright (c) 2026 The Promise Authors
+
+This module is part of the Promise Lang project, hosted in the `promise-language`
+organization and maintained under Promise Lang LLC. It is dual-licensed under
+the Apache License, Version 2.0, and the MIT License; see LICENSE-APACHE and
+LICENSE-MIT.
+
+-------------------------------------------------------------------------------
+Third-party attribution
+-------------------------------------------------------------------------------
+
+The binding surface in `wasi.pr` was generated from the `wasi_snapshot_preview1`
+interface definitions (`wasi_preview1.wit`) published by the WebAssembly WASI
+Subgroup:
+
+    https://github.com/WebAssembly/WASI
+
+Those interface definitions are licensed under the Apache License, Version 2.0,
+with LLVM exceptions. The bindings here were produced by `promise bind wit`
+(command line: `promise bind wit wasi_preview1.wit -name wasi -target wasi`)
+and then polished with inline documentation annotations.
+
+This module reproduces interface names, error codes, and ABI shapes from the
+WASI specification for interoperability. Trademarks and project names remain the
+property of their respective owners.

@@ -1,0 +1,108 @@
+// --- Errno enum tests ---
+
+test_errno_success_is_first_variant() `test `target(wasi) {
+    e := Errno.Success;
+    match e {
+        Errno.Success => {},
+        _ => assert(false, "expected Success"),
+    }
+}
+
+test_errno_variants_are_distinct() `test `target(wasi) {
+    a := Errno.Success;
+    b := Errno.Again;
+    match a {
+        Errno.Again => assert(false, "Success should not be Again"),
+        _ => {},
+    }
+    match b {
+        Errno.Again => {},
+        _ => assert(false, "expected Again"),
+    }
+}
+
+// --- Clockid enum tests ---
+
+test_clockid_variants() `test `target(wasi) {
+    c := Clockid.Realtime;
+    match c {
+        Clockid.Realtime => {},
+        _ => assert(false, "expected Realtime"),
+    }
+    m := Clockid.Monotonic;
+    match m {
+        Clockid.Monotonic => {},
+        _ => assert(false, "expected Monotonic"),
+    }
+}
+
+// --- Whence enum tests ---
+
+test_whence_variants() `test `target(wasi) {
+    s := Whence.Set;
+    match s { Whence.Set => {}, _ => assert(false, "expected Set"), }
+    c := Whence.Cur;
+    match c { Whence.Cur => {}, _ => assert(false, "expected Cur"), }
+    e := Whence.End;
+    match e { Whence.End => {}, _ => assert(false, "expected End"), }
+}
+
+// --- Fdflags tests ---
+
+test_fdflags_construction() `test `target(wasi) {
+    f := Fdflags.append;
+    assert(f._bits == 1, "append bit");
+    assert(Fdflags.dsync._bits == 2, "dsync bit");
+    assert(Fdflags.nonblock._bits == 4, "nonblock bit");
+    assert(Fdflags.rsync._bits == 8, "rsync bit");
+    assert(Fdflags.sync._bits == 16, "sync bit");
+}
+
+test_fdflags_has() `test `target(wasi) {
+    f := Fdflags.append;
+    assert(f.has(Fdflags.append), "has append");
+    assert(!f.has(Fdflags.sync), "not has sync");
+}
+
+test_fdflags_set() `test `target(wasi) {
+    f := Fdflags.append.set(Fdflags.sync);
+    assert(f.has(Fdflags.append), "has append after set");
+    assert(f.has(Fdflags.sync), "has sync after set");
+    assert(!f.has(Fdflags.nonblock), "not has nonblock");
+    assert(f._bits == 17, "combined bits");
+}
+
+// --- Oflags tests ---
+
+test_oflags_construction() `test `target(wasi) {
+    assert(Oflags.creat._bits == 1, "creat bit");
+    assert(Oflags.directory._bits == 2, "directory bit");
+    assert(Oflags.excl._bits == 4, "excl bit");
+    assert(Oflags.trunc._bits == 8, "trunc bit");
+}
+
+test_oflags_combine() `test `target(wasi) {
+    f := Oflags.creat.set(Oflags.trunc);
+    assert(f.has(Oflags.creat), "has creat");
+    assert(f.has(Oflags.trunc), "has trunc");
+    assert(!f.has(Oflags.excl), "not has excl");
+}
+
+// --- Rights tests ---
+
+test_rights_basic_flags() `test `target(wasi) {
+    assert(Rights.fd_read._bits == 2, "fd_read bit");
+    assert(Rights.fd_write._bits == 64, "fd_write bit");
+    assert(Rights.path_open._bits == 8192, "path_open bit");
+}
+
+test_rights_combine() `test `target(wasi) {
+    r := Rights.fd_read.set(Rights.fd_write);
+    assert(r.has(Rights.fd_read), "has fd_read");
+    assert(r.has(Rights.fd_write), "has fd_write");
+    assert(!r.has(Rights.fd_seek), "not has fd_seek");
+    assert(r._bits == 66, "combined bits");
+}
+
+// NOTE: Function call tests are blocked by T0283 (extern sret ABI mismatch on WASM).
+// Enum, flag type, and bitfield tests above exercise all non-extern code paths.

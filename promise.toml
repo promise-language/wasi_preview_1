@@ -1,0 +1,3 @@
+[module]
+name = "wasi_preview_1"
+epoch = "2026.0"
