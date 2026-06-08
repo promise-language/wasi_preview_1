@@ -104,5 +104,5 @@ test_rights_combine() `test `target(wasi) {
     assert(r._bits == 66, "combined bits");
 }
 
-// NOTE: Function call tests are blocked by T0283 (extern sret ABI mismatch on WASM).
+// NOTE: Function call tests are blocked by bug T0283 (extern sret ABI mismatch on WASM).
 // Enum, flag type, and bitfield tests above exercise all non-extern code paths.
